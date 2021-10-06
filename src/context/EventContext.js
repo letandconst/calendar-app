@@ -67,7 +67,13 @@ const EventContextProvider = (props) => {
 
   return (
     <EventContext.Provider
-      value={{ addEvent, deleteEvent, updateEvent, events, setEvents }}
+      value={{
+        addEvent,
+        deleteEvent,
+        updateEvent,
+        events,
+        setEvents,
+      }}
     >
       {props.children}
     </EventContext.Provider>

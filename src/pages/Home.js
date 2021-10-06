@@ -1,13 +1,36 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 
 import EventList from "../components/Event/EventList";
+import { EventContext } from "../context/EventContext";
 
 const Home = () => {
+  const { events } = useContext(EventContext);
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearch = (search) => {
+    setSearch(search);
+    if (search !== "") {
+      const newEventList = events.filter((event) => {
+        return Object.values(event)
+          .join(" ")
+          .toLowerCase()
+          .includes(search.toLowerCase());
+      });
+      setSearchResults(newEventList);
+    } else {
+      setSearchResults(events);
+    }
+  };
   return (
     <>
       <Container>
-        <EventList />
+        <EventList
+          find={search}
+          searchKeyword={handleSearch}
+          events={search.length < 1 ? events : searchResults}
+        />
       </Container>
     </>
   );

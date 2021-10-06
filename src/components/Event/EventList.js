@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 
 import { EventContext } from "../../context/EventContext";
 
@@ -7,15 +7,32 @@ import { Button } from "antd";
 
 import EventCard from "../Event/EventCard";
 
-const EventList = () => {
+const EventList = (props) => {
   const { events } = useContext(EventContext);
+  const searchInput = useRef("");
   useEffect(() => {}, [events]);
 
+  const getSearch = () => {
+    props.searchKeyword(searchInput.current.value);
+  };
+
+  const renderEvents = props.events.map((event) => {
+    return <EventCard event={event} key={event.id} />;
+  });
   return (
     <div>
-      {events.map((event, i) => (
-        <EventCard event={event} key={i} />
-      ))}
+      <div class="search">
+        <input
+          type="text"
+          ref={searchInput}
+          placeholder="Search "
+          value={props.find}
+          onChange={getSearch}
+        />
+      </div>
+      <div>
+        {renderEvents.length > 0 ? renderEvents : "No Events available"}
+      </div>
       <Link to="/add-event">
         <Button className="">Add Event</Button>
       </Link>

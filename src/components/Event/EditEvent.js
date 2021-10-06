@@ -26,13 +26,21 @@ const EditEvent = ({ event, setEvents }) => {
     status: "",
   });
 
-  const { name } = newEvent;
+  const { name, date, status } = newEvent;
 
   const handleChange = (e) => {
     setNewEvent({ ...newEvent, [e.target.name]: e.target.value });
+    console.log(newEvent);
   };
 
-  const handleSelect = (e) => {};
+  const onChange = (date, dateString) => {
+    setSelectedDate(date);
+  };
+
+  const handleSelect = (e) => {
+    setSelectedStatus(e.label);
+    console.log(selectedStatus);
+  };
 
   const handleSubmit = (e) => {
     updateEvent(name, selectedDate, selectedStatus);
@@ -68,7 +76,8 @@ const EditEvent = ({ event, setEvents }) => {
         </Form.Item>
         <Form.Item label="DatePicker">
           <DatePicker
-            onChange={(date) => setSelectedDate(date)}
+            // onChange={(date) => setSelectedDate(date)}
+            onChange={onChange}
             selected={selectedDate}
             showYearDropdown
             scrollableMonthYearDropdown

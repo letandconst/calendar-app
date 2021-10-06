@@ -38,6 +38,9 @@ const AddEvent = () => {
     console.log(selectedStatus);
   };
 
+  function onChange(date) {
+    setSelectedDate(date);
+  }
   const handleChange = (e) => {
     setEvent({ ...event, [e.target.name]: e.target.value });
   };
@@ -74,7 +77,8 @@ const AddEvent = () => {
         </Form.Item>
         <Form.Item label="DatePicker">
           <DatePicker
-            onChange={(date) => setSelectedDate(date)}
+            // onChange={(date) => setSelectedDate(date)}
+            onChange={onChange}
             selected={selectedDate}
             showYearDropdown
             scrollableMonthYearDropdown
