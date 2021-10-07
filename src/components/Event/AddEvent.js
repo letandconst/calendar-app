@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Form, Button, DatePicker } from "antd";
 import { EventContext } from "../../context/EventContext";
 import Select from "react-select";
+import options from "../../api/options";
 
 const initialState = {
   name: "",
@@ -11,20 +12,6 @@ const initialState = {
 };
 const { useForm } = Form;
 const AddEvent = () => {
-  const options = [
-    {
-      value: 1,
-      label: "Pending",
-    },
-    {
-      value: 2,
-      label: "On Going",
-    },
-    {
-      value: 3,
-      label: "Done",
-    },
-  ];
   let history = useHistory();
   const { addEvent } = useContext(EventContext);
   const [event, setEvent] = useState(initialState);

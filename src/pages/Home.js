@@ -5,10 +5,15 @@ import EventList from "../components/Event/EventList";
 import { EventContext } from "../context/EventContext";
 
 const Home = () => {
-  const { events } = useContext(EventContext);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+  const { events, setEvents } = useContext(EventContext);
+
+  const allStatus = ["All", ...new Set(events.map((item) => item.status))];
+  const [filterButtons, setFilteredButtons] = useState(allStatus);
+
+  console.log(allStatus);
   const handleSearch = (search) => {
     setSearch(search);
     if (search !== "") {
@@ -23,12 +28,25 @@ const Home = () => {
       setSearchResults(events);
     }
   };
+
+  const handleFilter = (button) => {
+    if (button === "All") {
+      setEvents(events);
+      return;
+    }
+
+    const filteredData = events.filter((item) => item.status === button);
+    setEvents(filteredData);
+  };
+
   return (
     <>
       <Container>
         <EventList
           find={search}
           searchKeyword={handleSearch}
+          filterByStatus={handleFilter}
+          button={allStatus}
           events={search.length < 1 ? events : searchResults}
         />
       </Container>
@@ -48,18 +66,22 @@ const Container = styled.div`
    
     .ant-row {
       padding: 20px;
-      background: #ececec;
+      background-color: #FBE7C6;
     }
+   
     .ant-col{
       background:#fff;
-      
+    }
+    .ant-col > div{
+      display:flex;
     }
     .ant-statistic, .ant-col {
-      padding:0 20px;
+      padding:10px 20px;
     }
-    .ant-col > span{
+    .ant-col > span {
       margin: 10px 15px;
     }
+   
  
     
   }

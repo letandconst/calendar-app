@@ -15,12 +15,12 @@ const EventCard = ({ event }) => {
     <>
       <Row gutter={16}>
         <Col span={12}>
-          <Statistic title="Name" value={event.name} />
-          {event.id}
+          <Statistic value={event.name} />
+
           <Tag color={color}>{event.status}</Tag>
         </Col>
         <Col span={12}>
-          <Statistic title="Date" value={moment(event.date).format("LL")} />
+          <Statistic value={moment(event.date).format("LL")} />
 
           <Link to={`/edit-event/${event.id}`}>
             {/* <Link
