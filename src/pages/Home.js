@@ -10,10 +10,13 @@ const Home = () => {
 
   const { events, setEvents } = useContext(EventContext);
 
+  const [filteredEvents, setFilteredEvents] = useState(events);
+
+  // const allStatus = ["All", ...new Set(events.map((item) => item.status))];
+  // const [filterButtons, setFilteredButtons] = useState(allStatus);
   const allStatus = ["All", ...new Set(events.map((item) => item.status))];
   const [filterButtons, setFilteredButtons] = useState(allStatus);
 
-  console.log(allStatus);
   const handleSearch = (search) => {
     setSearch(search);
     if (search !== "") {
@@ -29,16 +32,29 @@ const Home = () => {
     }
   };
 
+  // const handleFilter = (button) => {
+  //   if (button === "All") {
+  //     setEvents(events);
+  //     return;
+  //   }
+
+  //   // const filteredData = events.filter((item) => item.status === button);
+  //   // setEvents(filteredData);
+  //   const filteredData = events.filter((item) => item.status === button);
+  //   setFilteredEvents(filteredData);
+  // };
+
   const handleFilter = (button) => {
     if (button === "All") {
-      setEvents(events);
+      // change filtered events array instead of the events array itself
+      setFilteredEvents(events);
       return;
     }
 
     const filteredData = events.filter((item) => item.status === button);
-    setEvents(filteredData);
+    setFilteredEvents(filteredData);
+    console.log(filteredData);
   };
-
   return (
     <>
       <Container>
@@ -47,7 +63,7 @@ const Home = () => {
           searchKeyword={handleSearch}
           filterByStatus={handleFilter}
           button={allStatus}
-          events={search.length < 1 ? events : searchResults}
+          events={search.length < 1 ? filteredEvents : searchResults}
         />
       </Container>
     </>

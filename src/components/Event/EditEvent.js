@@ -7,7 +7,7 @@ import api from "../../api/index";
 import Select from "react-select";
 
 const { useForm } = Form;
-const EditEvent = ({ event, setEvents }) => {
+const EditEvent = ({ event }) => {
   const { updateEvent } = useContext(EventContext);
   const [formHandler] = useForm();
   const [selectedDate, setSelectedDate] = useState(null);
@@ -28,18 +28,22 @@ const EditEvent = ({ event, setEvents }) => {
 
   const { name, date, status } = newEvent;
 
-  const handleChange = (e) => {
-    setNewEvent({ ...newEvent, [e.target.name]: e.target.value });
-    console.log(newEvent);
-  };
+  // const handleChange = (e) => {
+  //   setNewEvent({ ...newEvent, [e.target.name]: e.target.value });
+  //   console.log(newEvent);
+  // };
 
   const onChange = (date, dateString) => {
     setSelectedDate(date);
   };
 
+  useEffect(() => {
+    console.log(selectedDate);
+  }, [selectedDate]);
+
   const handleSelect = (e) => {
     setSelectedStatus(e.label);
-    console.log(selectedStatus);
+    // console.log(selectedStatus);
   };
 
   const handleSubmit = (e) => {
@@ -50,6 +54,11 @@ const EditEvent = ({ event, setEvents }) => {
   const loadEvents = async () => {
     const result = await api.get(`/events/${id}`);
     setNewEvent(result.data);
+  };
+
+  const [inputValue, setInputValue] = useState("");
+  const handleChange = (value) => {
+    setInputValue(value);
   };
 
   return (
@@ -72,12 +81,17 @@ const EditEvent = ({ event, setEvents }) => {
           />
         </Form.Item>
         <Form.Item label="Select">
-          <Select options={options} onChange={handleSelect} />
+          {/* <Select options={options} onChange={handleSelect} /> */}
+          <Select
+            options={options}
+            inputValue={inputValue}
+            onInputChange={handleChange}
+          />
         </Form.Item>
         <Form.Item label="DatePicker">
           <DatePicker
-            // onChange={(date) => setSelectedDate(date)}
-            onChange={onChange}
+            onChange={(date) => setSelectedDate(date)}
+            // onChange={onChange}
             selected={selectedDate}
             showYearDropdown
             scrollableMonthYearDropdown
