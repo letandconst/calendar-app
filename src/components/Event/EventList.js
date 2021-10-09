@@ -1,22 +1,26 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { EventContext } from "../../context/EventContext";
 import EventCard from "../Event/EventCard";
-import { Link } from "react-router-dom";
-import { Button } from "antd";
+
 import FilterButton from "../Buttons/FilterButton";
 import styled from "styled-components";
+
 const EventList = (props) => {
   const { events } = useContext(EventContext);
-
   const searchInput = useRef("");
+
   useEffect(() => {}, [events]);
 
   const getSearch = () => {
     props.searchKeyword(searchInput.current.value);
   };
 
+  const getRemove = (id) => {
+    props.handleRemove(id);
+  };
+
   const renderEvents = props.events.map((event) => {
-    return <EventCard event={event} key={event.id} />;
+    return <EventCard event={event} key={event.id} onRemove={getRemove} />;
   });
   return (
     <>
@@ -37,9 +41,6 @@ const EventList = (props) => {
       <div>
         {renderEvents.length > 0 ? renderEvents : "No Events available"}
       </div>
-      <Link to="/add-event">
-        <Button className="btn-primary">Add Event</Button>
-      </Link>
     </>
   );
 };

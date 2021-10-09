@@ -5,20 +5,15 @@ import { EventContext } from "../../context/EventContext";
 import options from "../../api/options";
 import api from "../../api/index";
 import Select from "react-select";
+import moment from "moment";
 
 const { useForm } = Form;
-const EditEvent = ({ event }) => {
-  const { updateEvent } = useContext(EventContext);
+
+const EditEvent = (props) => {
   const [formHandler] = useForm();
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState(options.label);
-
-  useEffect(() => {
-    loadEvents();
-  }, []);
-
-  let history = useHistory();
-  const { id } = useParams();
+  const [inputValue, setInputValue] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState();
 
   const [newEvent, setNewEvent] = useState({
     name: "",
@@ -26,39 +21,50 @@ const EditEvent = ({ event }) => {
     status: "",
   });
 
+  let history = useHistory();
+  const { id } = useParams();
+  const { updateEvent } = useContext(EventContext);
   const { name, date, status } = newEvent;
-
-  // const handleChange = (e) => {
-  //   setNewEvent({ ...newEvent, [e.target.name]: e.target.value });
-  //   console.log(newEvent);
-  // };
-
-  const onChange = (date, dateString) => {
-    setSelectedDate(date);
-  };
-
-  useEffect(() => {
-    console.log(selectedDate);
-  }, [selectedDate]);
-
-  const handleSelect = (e) => {
-    setSelectedStatus(e.label);
-    // console.log(selectedStatus);
-  };
-
-  const handleSubmit = (e) => {
-    updateEvent(name, selectedDate, selectedStatus);
-    history.push("/");
-  };
 
   const loadEvents = async () => {
     const result = await api.get(`/events/${id}`);
     setNewEvent(result.data);
   };
 
-  const [inputValue, setInputValue] = useState("");
-  const handleChange = (value) => {
-    setInputValue(value);
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(newEvent).length === 0) return;
+
+    const option = options.filter((option) => option.label === newEvent.status);
+    if (option.length < 1) {
+      console.warn("no matching options");
+      return;
+    }
+    setInputValue(option[0]);
+    setSelectedDate(newEvent.date);
+  }, [newEvent]);
+
+  useEffect(() => {}, [selectedDate]);
+
+  const handleSubmit = () => {
+    updateEvent(name, selectedDate, inputValue);
+    history.push("/");
+  };
+
+  const onDateChange = (_, dateString) => {
+    setSelectedDate(selectedDate);
+  };
+
+  const handleChange = (selectedOption) => {
+    setInputValue(selectedOption.status);
+  };
+
+  const handleChangeInput = (e) => {
+    const { name, value } = e.target;
+    setNewEvent({ ...newEvent, [name]: value });
   };
 
   return (
@@ -77,24 +83,23 @@ const EditEvent = ({ event }) => {
             type="text"
             name="name"
             value={name}
-            onChange={(e) => handleChange(e)}
+            onChange={handleChangeInput}
           />
         </Form.Item>
         <Form.Item label="Select">
-          {/* <Select options={options} onChange={handleSelect} /> */}
           <Select
             options={options}
-            inputValue={inputValue}
-            onInputChange={handleChange}
+            onChange={handleChange}
+            value={inputValue}
           />
         </Form.Item>
         <Form.Item label="DatePicker">
           <DatePicker
-            onChange={(date) => setSelectedDate(date)}
-            // onChange={onChange}
+            onChange={onDateChange}
             selected={selectedDate}
             showYearDropdown
             scrollableMonthYearDropdown
+            defaultValue={moment()}
           />
         </Form.Item>
         <Form.Item className="button-container">

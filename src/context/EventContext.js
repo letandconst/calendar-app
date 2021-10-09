@@ -6,6 +6,9 @@ export const EventContext = createContext();
 
 const EventContextProvider = (props) => {
   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState(events);
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const fetchEvents = async () => {
     try {
@@ -43,15 +46,7 @@ const EventContextProvider = (props) => {
     }
   };
 
-  const updateEvent = async () => {
-    // const response = await api.put(`/edit-events/${id}`);
-    // const { id, name, date, status } = response.data;
-    // setEvents(
-    //   events.map((event) => {
-    //     return event.id === id ? { ...response.data } : event;
-    //   })
-    // );
-  };
+  const updateEvent = async () => {};
 
   const deleteEvent = async (id) => {
     try {
@@ -65,6 +60,32 @@ const EventContextProvider = (props) => {
     }
   };
 
+  const handleFilter = (button) => {
+    if (button === "All") {
+      // change filtered events array instead of the events array itself
+      setFilteredEvents(events);
+      return;
+    }
+
+    const filteredData = events.filter((item) => item.status === button);
+    setFilteredEvents(filteredData);
+    console.log(filteredData);
+  };
+
+  const handleSearch = (search) => {
+    setSearch(search);
+    if (search !== "") {
+      const newEventList = events.filter((event) => {
+        return Object.values(event)
+          .join(" ")
+          .toLowerCase()
+          .includes(search.toLowerCase());
+      });
+      setSearchResults(newEventList);
+    } else {
+      setSearchResults(events);
+    }
+  };
   return (
     <EventContext.Provider
       value={{
@@ -73,6 +94,11 @@ const EventContextProvider = (props) => {
         updateEvent,
         events,
         setEvents,
+        handleFilter,
+        handleSearch,
+        filteredEvents,
+        searchResults,
+        search,
       }}
     >
       {props.children}

@@ -49,20 +49,20 @@ const AddEvent = () => {
         onFinish={handleSubmit}
         form={formHandler}
       >
-        <Form.Item label="Input">
+        <Form.Item label="Name">
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             name="name"
             type="text"
-            placeholder="event"
+            placeholder=""
             value={name}
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="Select">
+        <Form.Item label="Status">
           <Select options={options} onChange={handleSelect} />
         </Form.Item>
-        <Form.Item label="DatePicker">
+        <Form.Item label="Date">
           <DatePicker
             // onChange={(date) => setSelectedDate(date)}
             onChange={onChange}
@@ -87,7 +87,6 @@ const AddEvent = () => {
           </Button>
         </Form.Item>
       </Form>
-      <div>test</div>
     </>
   );
 };
